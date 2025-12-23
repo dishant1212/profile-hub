@@ -15,7 +15,7 @@ userRouter.post('/user/signin', handleUserSignin);
 
 userRouter.get('/user/profle/:id', restrictToLoggedinUserOnly, getUserProfile);
 userRouter.put(
-  '/user/profle/:id',
+  '/user/profle/edit/:id',
   restrictToLoggedinUserOnly,
   imageUpload.single('profileImg'),
   updateUserProfile
