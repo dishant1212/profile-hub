@@ -41,16 +41,19 @@ const handleUserSignup = async (req, res) => {
 };
 
 const handleUserSignin = async (req, res) => {
-  const { emailId, password } = req.body;
+  const { emailId, password, userName } = req.body;
 
-  if (!emailId || !password) {
+  if ((!emailId && !userName) || !password) {
     return res.status(400).json({
       sucess: false,
-      message: 'emailId, password are required',
+      message:
+        'Please enter a valid email ID or username, along with your password.',
     });
   }
 
-  const user = await Users.findOne({ emailId });
+  const user = await Users.findOne({
+    $or: [{ emailId }, { userName }],
+  });
 
   if (!user) {
     return res.status(401).json({
@@ -76,7 +79,11 @@ const handleUserSignin = async (req, res) => {
   return res.status(200).json({
     success: true,
     message: 'Login successful',
-    data: { userName: user?.userName, emailId: user.emailId },
+    data: {
+      userName: user?.userName,
+      emailId: user.emailId,
+      userId: user.userId,
+    },
   });
 };
 
@@ -93,19 +100,22 @@ const getUserProfile = async (req, res) => {
 
   return res.status(200).json({
     data: {
-      id: userProfile.userId,
-      name: userProfile.userName,
-      emailAddress: userProfile.emailId,
-      profileImgUrl: userProfile.profileImg,
+      userId: userProfile.userId,
+      userName: userProfile.userName,
+      emailId: userProfile.emailId,
+      profileImg: '',
+      phoneNumber: 0,
+      address: '',
+      city: '',
+      country: '',
     },
   });
 };
 
 const updateUserProfile = async (req, res) => {
   const { id } = req.params;
-
   const { filename } = req.file;
-  const { userName, emailId } = req.body;
+  const { userName, emailId, phoneNumber, address, city, country } = req.body;
 
   if (!id) {
     return res.status(400).json({
@@ -120,6 +130,10 @@ const updateUserProfile = async (req, res) => {
       userName: userName,
       emailId: emailId,
       profileImg: filename,
+      phoneNumber: phoneNumber,
+      address: address,
+      city: city,
+      country: country,
     }
   );
 

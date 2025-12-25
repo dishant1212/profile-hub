@@ -19,6 +19,18 @@ const userShema = new mongoose.Schema({
   profileImg: {
     type: String,
   },
+  phoneNumber: {
+    type: Boolean,
+  },
+  address: {
+    type: String,
+  },
+  city: {
+    type: String,
+  },
+  country: {
+    type: String,
+  },
 });
 
 const Users = mongoose.model('user', userShema);
