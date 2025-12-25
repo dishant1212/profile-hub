@@ -11,7 +11,10 @@ const MONGODB_URL = process.env.MONGODB_URL;
 
 connectMongoDB(MONGODB_URL);
 
-const whitelist = ['http://localhost:3000'];
+const whitelist = [
+  'http://localhost:3000',
+  'https://profile-hub-x0f8.onrender.com',
+];
 const corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
