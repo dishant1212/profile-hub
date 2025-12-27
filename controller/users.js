@@ -74,9 +74,9 @@ const handleUserSignin = async (req, res) => {
   const token = setUser(user);
   res.cookie('uid', token, {
     httpOnly: true,
-    secure: true, // REQUIRED for SameSite=None
-    sameSite: 'none', // REQUIRED for cross-site
-    maxAge: 24 * 60 * 60 * 1000, // 1 day
+    secure: true,
+    sameSite: 'none',
+    maxAge: 24 * 60 * 60 * 1000,
   });
   return res.status(200).json({
     success: true,

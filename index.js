@@ -13,20 +13,25 @@ connectMongoDB(MONGODB_URL);
 
 const whitelist = [
   'http://localhost:3000',
+  'http://127.0.0.1:3000',
   'https://profile-hub-x0f8.onrender.com',
 ];
+
 const corsOptions = {
   origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
+    if (!origin) return callback(null, true);
+
+    if (whitelist.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
     }
   },
+  credentials: true,
 };
 
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use('/api', userRouter);
 
