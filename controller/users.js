@@ -137,7 +137,15 @@ const updateUserProfile = async (req, res) => {
     if (!req.file) {
       return res.status(400).json({
         success: false,
-        message: 'Profile image is required',
+        message: 'Please upload profile image',
+      });
+    }
+
+    if (!req.file.path) {
+      return res.status(400).json({
+        success: false,
+        message: 'Image upload failed, file path not generated',
+        file: req.file,
       });
     }
 
