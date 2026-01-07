@@ -124,43 +124,60 @@ const getUserProfile = async (req, res) => {
 };
 
 const updateUserProfile = async (req, res) => {
-  const { id } = req.params;
-  const filePath = req.file ? req.file.path : '';
+  try {
+    const { id } = req.params;
 
-  const { userName, emailId, phoneNumber, address, city, country } = req.body;
-
-  if (!id) {
-    return res.status(400).json({
-      sucess: false,
-      message: 'User id is required',
-    });
-  }
-
-  const updatedUser = await Users.findOneAndUpdate(
-    { userId: id },
-    {
-      userName: userName,
-      emailId: emailId,
-      profileImg: filePath,
-      phoneNumber: phoneNumber,
-      address: address,
-      city: city,
-      country: country,
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: 'User id is required',
+      });
     }
-  );
 
-  if (!updatedUser) {
-    return res.status(404).json({
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'Profile image is required',
+      });
+    }
+
+    const { userName, emailId, phoneNumber, address, city, country } = req.body;
+
+    const updateData = {
+      userName,
+      emailId,
+      phoneNumber,
+      address,
+      city,
+      country,
+      profileImg: req.file.path,
+    };
+
+    const updatedUser = await Users.findOneAndUpdate(
+      { userId: id },
+      updateData,
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Profile updated successfully',
+      data: updatedUser,
+    });
+  } catch (error) {
+    console.error('Update profile error:', error);
+    return res.status(500).json({
       success: false,
-      message: 'User not found',
+      message: 'Server error',
     });
   }
-
-  return res.status(200).json({
-    success: true,
-    message: 'Profile updated successfully',
-    data: updatedUser,
-  });
 };
 
 module.exports = {
