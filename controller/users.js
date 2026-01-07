@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const Users = require('../modules/users');
 const { setUser } = require('../utils/auth');
 
@@ -71,13 +72,15 @@ const handleUserSignin = async (req, res) => {
     });
   }
 
-  const token = setUser(user);
-  res.cookie('uid', token, {
+  const authToken = setUser(user);
+
+  res.cookie('uid', authToken, {
     httpOnly: true,
     secure: true,
     sameSite: 'none',
     maxAge: 24 * 60 * 60 * 1000,
   });
+
   return res.status(200).json({
     success: true,
     message: 'Login successful',
@@ -87,6 +90,12 @@ const handleUserSignin = async (req, res) => {
       userId: user.userId,
     },
   });
+};
+
+const handleCsrfGetToken = (req, res) => {
+  const csrfToken = crypto.randomBytes(32).toString('hex');
+
+  res.status(200).json({ token: csrfToken });
 };
 
 const getUserProfile = async (req, res) => {
@@ -116,7 +125,8 @@ const getUserProfile = async (req, res) => {
 
 const updateUserProfile = async (req, res) => {
   const { id } = req.params;
-  const { filename } = req.file;
+  const filePath = req.file ? req.file.path : '';
+
   const { userName, emailId, phoneNumber, address, city, country } = req.body;
 
   if (!id) {
@@ -131,7 +141,7 @@ const updateUserProfile = async (req, res) => {
     {
       userName: userName,
       emailId: emailId,
-      profileImg: filename,
+      profileImg: filePath,
       phoneNumber: phoneNumber,
       address: address,
       city: city,
@@ -158,4 +168,5 @@ module.exports = {
   handleUserSignup,
   getUserProfile,
   updateUserProfile,
+  handleCsrfGetToken,
 };
