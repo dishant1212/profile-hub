@@ -16,6 +16,7 @@ const whitelist = [
   'http://localhost:3001',
   'http://127.0.0.1:3000',
   'https://profile-hub-x0f8.onrender.com',
+  'https://effulgent-biscochitos-291535.netlify.app'
 ];
 
 const corsOptions = {
