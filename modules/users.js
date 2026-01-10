@@ -20,7 +20,7 @@ const userShema = new mongoose.Schema({
     type: String,
   },
   phoneNumber: {
-    type: Boolean,
+    type: Number,
   },
   address: {
     type: String,

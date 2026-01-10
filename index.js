@@ -13,6 +13,7 @@ connectMongoDB(MONGODB_URL);
 
 const whitelist = [
   'http://localhost:3000',
+  'http://localhost:3001',
   'http://127.0.0.1:3000',
   'https://profile-hub-x0f8.onrender.com',
 ];
